@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Will You Be My Valentine? 💜</title>
+  <meta name="description" content="A cute valentine proposal page" />
+  <style>
+    :root{
+      /* Theme: switch these two for greener/purpler vibes */
+      --bg1: #0b1020;     /* deep night */
+      --bg2: #160b2a;     /* deep purple */
+      --accent: #780deb;  /* purple */
+      --accent2:#4de3a5;  /* green */
+      --card: rgba(255,255,255,0.08);
+      --card2: rgba(255,255,255,0.12);
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.70);
+      --shadow: 0 18px 60px rgba(0,0,0,0.45);
+      --radius: 22px;
+    }
+
+    *{ box-sizing: border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color: var(--text);
+      background: radial-gradient(1200px 800px at 20% 10%, rgba(179,107,255,0.25), transparent 60%),
+                  radial-gradient(1200px 800px at 80% 30%, rgba(77,227,165,0.22), transparent 55%),
+                  linear-gradient(160deg, var(--bg1), var(--bg2));
+      overflow-x:hidden;
+    }
+
+    /* Moving text background */
+    .bg-marquee{
+      position: fixed;
+      inset: -40px 0 0 0;
+      pointer-events:none;
+      z-index: 0;
+      opacity: 0.18;
+      filter: blur(0.2px);
+    }
+    .marquee-row{
+      display:flex;
+      gap: 40px;
+      white-space: nowrap;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      font-size: clamp(14px, 1.8vw, 22px);
+      color: rgba(255,255,255,0.85);
+      mix-blend-mode: screen;
+      transform: rotate(-8deg);
+      margin: 24px 0;
+    }
+    .marquee-row span{
+      display:inline-block;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    @keyframes slideLeft { from{ transform: translateX(0); } to{ transform: translateX(-50%); } }
+    @keyframes slideRight{ from{ transform: translateX(-50%); } to{ transform: translateX(0); } }
+
+    .marquee-track{
+      display:flex;
+      width: 200%;
+      animation: slideLeft 22s linear infinite;
+    }
+    .marquee-row.reverse .marquee-track{
+      animation: slideRight 26s linear infinite;
+    }
+
+    /* Main layout */
+    .wrap{
+      position: relative;
+      z-index: 1;
+      min-height: 100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 40px 16px;
+    }
+    .card{
+      width: min(920px, 100%);
+      background: linear-gradient(180deg, var(--card), rgba(255,255,255,0.06));
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      overflow:hidden;
+    }
+    .card-inner{
+      display:grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 0;
+    }
+
+    @media (max-width: 860px){
+      .card-inner{ grid-template-columns: 1fr; }
+    }
+
+    .left{
+      padding: 28px 26px 26px;
+    }
+    .right{
+      padding: 22px;
+      border-left: 1px solid rgba(255,255,255,0.12);
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+    }
+    @media (max-width: 860px){
+      .right{ border-left: none; border-top: 1px solid rgba(255,255,255,0.12); }
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .dot{
+      width:10px;height:10px;border-radius:999px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      box-shadow: 0 0 18px rgba(179,107,255,0.35);
+    }
+
+    h1{
+      margin: 18px 0 10px;
+      font-size: clamp(34px, 4.2vw, 56px);
+      line-height: 1.02;
+      letter-spacing: -0.02em;
+    }
+    .sub{
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.5;
+      max-width: 56ch;
+    }
+
+    .question{
+      margin-top: 18px;
+      padding: 18px 16px;
+      border-radius: 18px;
+      background: rgba(0,0,0,0.18);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .question h2{
+      margin:0 0 8px;
+      font-size: 20px;
+      letter-spacing: -0.01em;
+    }
+    .question p{
+      margin:0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .btn-row{
+      position: relative;
+      margin-top: 18px;
+      display:flex;
+      gap: 12px;
+      align-items:center;
+      flex-wrap: wrap;
+      padding-bottom: 12px;
+    }
+    button{
+      font: inherit;
+      border: none;
+      cursor: pointer;
+      padding: 12px 16px;
+      border-radius: 14px;
+      transition: transform 0.12s ease, filter 0.12s ease;
+      user-select:none;
+    }
+    button:active{ transform: scale(0.98); }
+
+    .yes{
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      color: #0b0f16;
+      font-weight: 800;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.25);
+    }
+    .yes:hover{ filter: brightness(1.05); }
+
+    .no{
+      background: rgba(255,255,255,0.10);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.18);
+      position: relative; /* we’ll move it with JS via translate */
+    }
+    .no:hover{ filter: brightness(1.05); }
+
+    .try{
+      margin-left: 8px;
+      color: rgba(255,255,255,0.82);
+      font-size: 13px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.20);
+      border: 1px solid rgba(255,255,255,0.12);
+      display:none;
+    }
+
+    .smallprint{
+      margin-top: 10px;
+      color: rgba(255,255,255,0.55);
+      font-size: 12px;
+    }
+
+    /* Photo area */
+    .photo-title{
+      margin: 2px 0 10px;
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .photo{
+      width:100%;
+      aspect-ratio: 4 / 5;
+      border-radius: 18px;
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,0.14);
+      box-shadow: 0 14px 40px rgba(0,0,0,0.30);
+      background: rgba(255,255,255,0.05);
+      position: relative;
+    }
+    .photo img{
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      display:block;
+      transform: scale(1.02);
+    }
+
+    .collage{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 10px;
+      width:100%;
+      aspect-ratio: 4 / 5;
+    }
+    .collage img{
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .caption{
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    /* Celebration overlay */
+    .overlay{
+      position: fixed;
+      inset: 0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index: 50;
+      background: rgba(0,0,0,0.45);
+      backdrop-filter: blur(8px);
+      padding: 18px;
+    }
+    .overlay .pop{
+      width: min(720px, 100%);
+      border-radius: 26px;
+      padding: 26px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.07));
+      border: 1px solid rgba(255,255,255,0.20);
+      box-shadow: var(--shadow);
+      text-align:center;
+    }
+    .overlay h3{
+      margin: 0 0 8px;
+      font-size: clamp(28px, 4vw, 44px);
+      letter-spacing: -0.02em;
+    }
+    .overlay p{
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 16px;
+    }
+    .close{
+      background: rgba(255,255,255,0.12);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.18);
+      padding: 10px 14px;
+      border-radius: 14px;
+    }
+
+    /* Respect motion preferences */
+    @media (prefers-reduced-motion: reduce){
+      .marquee-track{ animation: none !important; }
+      button{ transition: none; }
+    }
+
+    /* Floating "Try again" popup text */
+.try-again-text{
+  position: fixed;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--accent);
+  pointer-events: none;
+  opacity: 0;
+  z-index: 10;
+  animation: popFade 2s ease forwards;
+}
+
+@keyframes popFade{
+  0%{
+    opacity: 0;
+    transform: scale(0.85) translateY(0);
+  }
+  15%{
+    opacity: 1;
+    transform: scale(1.05) translateY(-10px);
+  }
+  100%{
+    opacity: 0;
+    transform: scale(0.95) translateY(-30px);
+  }
+}
+
+
+
+  </style>
+</head>
+
+<body>
+  <!-- Moving background text -->
+  <div class="bg-marquee" aria-hidden="true">
+    <div class="marquee-row">
+      <div class="marquee-track" id="row1"></div>
+    </div>
+    <div class="marquee-row reverse">
+      <div class="marquee-track" id="row2"></div>
+    </div>
+    <div class="marquee-row">
+      <div class="marquee-track" id="row3"></div>
+    </div>
+  </div>
+
+  <main class="wrap">
+    <section class="card" role="region" aria-label="Valentine page">
+      <div class="card-inner">
+        <div class="left">
+      
+
+          <h1>Will you be my Valentine 🤔</h1>
+          <p class="sub">
+            I just want you Nada.  
+            You make life feel lighter, funnier, and a lot more beautiful.
+          </p>
+
+          <div class="question">
+            <h2>So… what do you say? 😁</h2>
+            <p>Better choose wisely.</p>
+          </div>
+
+          <div class="btn-row" id="btnRow">
+            <button class="yes" id="yesBtn">Yes 💖</button>
+
+            <button class="no" id="noBtn" aria-label="No (good luck clicking this)">
+              No 🙃
+            </button>
+          </div>
+
+        
+        </div>
+
+        <aside class="right">
+        
+
+        
+          <div class="photo collage">
+            <img src="pic1.jpg" alt="Photo 1">
+            <img src="pic2.jpg" alt="Photo 2">
+            <img src="pic3.jpg" alt="Photo 3">
+            <img src="pic4.jpg" alt="Photo 4">
+          </div>
+          
+
+          <p class="caption">
+            P.S. You’re my favorite person, always nadood :)
+          </p>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <!-- Celebration overlay -->
+  <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-label="Celebration">
+    <div class="pop">
+      <h3>WOOHOO 💘💘💘</h3>
+      <p>
+        Okay you're officialy mine :) 
+         I love you sooooo much cunt 🥰
+      </p>
+      <button class="close" id="closeBtn">Close</button>
+    </div>
+  </div>
+
+  <script>
+    // ===== Background text content =====
+    const phrases = [
+      "I love you", "Je t’aime", "Te amo","أحبك"];
+
+    function buildMarqueeRow(elId){
+      const el = document.getElementById(elId);
+      // Build two copies so it loops smoothly across 200% width
+      const oneRun = phrases.map(p => `<span>${p}</span>`).join("");
+      el.innerHTML = oneRun + oneRun;
+    }
+    buildMarqueeRow("row1");
+    buildMarqueeRow("row2");
+    buildMarqueeRow("row3");
+
+    // ===== Button behavior =====
+    const noBtn = document.getElementById("noBtn");
+    const yesBtn = document.getElementById("yesBtn");
+    const overlay = document.getElementById("overlay");
+    const closeBtn = document.getElementById("closeBtn");
+    const btnRow = document.getElementById("btnRow");
+
+    let noScale = 1;
+    let dodgeCount = 0;
+    let yesScale = 1;
+
+    // Helps keep the No button within the button row area
+    function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
+
+    function dodgeNoButton(e){
+  dodgeCount++;
+
+  // YES button grows slightly each time
+  yesScale += 0.06;
+  yesBtn.style.transform = `scale(${yesScale})`;
+
+  // Show "try again :)" near cursor
+  showTryAgain(e.clientX + 10, e.clientY - 10);
+
+  // Shrink NO, but keep it usable
+  noScale = Math.max(0.45, noScale * 0.9);
+
+  const area = btnRow.getBoundingClientRect();
+  const btn = noBtn.getBoundingClientRect();
+
+  const maxX = (area.width - btn.width) / 2;
+  const maxY = 14;
+
+  const x = (Math.random() * maxX * 2) - maxX;
+  const y = (Math.random() * maxY * 2) - maxY;
+
+  noBtn.style.transform =
+    `translate(${clamp(x, -maxX, maxX)}px, ${clamp(y, -maxY, maxY)}px) scale(${noScale})`;
+
+  // Optional: change text after many dodges
+  if (dodgeCount >= 8){
+    noBtn.textContent = "nope 😭";
+  }
+}
+
+function showTryAgain(x, y){
+  const msg = document.createElement("div");
+  msg.className = "try-again-text";
+  msg.textContent = "try again :)";
+
+  msg.style.left = x + "px";
+  msg.style.top = y + "px";
+
+  document.body.appendChild(msg);
+
+  setTimeout(() => {
+    msg.remove();
+  }, 2000);
+}
+
+    // Dodge on hover (desktop) + on touch (mobile)
+    noBtn.addEventListener("mouseenter", dodgeNoButton);
+    noBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      dodgeNoButton();
+    });
+    noBtn.addEventListener("touchstart", (e) => {
+      e.preventDefault();
+      dodgeNoButton();
+    }, { passive: false });
+
+    yesBtn.addEventListener("click", () => {
+      overlay.style.display = "flex";
+      tryTag.style.display = "none";
+    });
+
+    closeBtn.addEventListener("click", () => {
+      overlay.style.display = "none";
+    });
+
+    // Close overlay if user clicks outside the popup
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) overlay.style.display = "none";
+    });
+  </script>
+</body>
+</html>

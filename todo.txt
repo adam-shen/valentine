@@ -1,0 +1,4 @@
+Add confetti and hearts when yes is clicked
+Make yes button be centered after first time no is hovered over
+Do a 6 7 joke for when she hovers over it that many times hmm
+Make the I love you background be the whole screen not j top left
