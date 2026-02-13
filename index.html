@@ -493,6 +493,14 @@
     </div>
   </div>
 
+
+  <img
+    class="six-seven-gif"
+    id="sixSevenGif"
+    src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdjIyOHd4dmE0b3B4N3BqM2Q3aHZ4b2lqa2Y2amV0MXQxMTZ5d2wwaiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/3o7aD2saalBwwftBIY/giphy.gif"
+    alt="6 7 joke hand movement gif"
+  />
+
   <script>
     // ===== Background text content =====
     const phrases = [
@@ -516,6 +524,7 @@
     const overlay = document.getElementById("overlay");
     const closeBtn = document.getElementById("closeBtn");
     const btnRow = document.getElementById("btnRow");
+    const sixSevenGif = document.getElementById("sixSevenGif");
 
     let noScale = 1;
     let dodgeCount = 0;
@@ -613,8 +622,8 @@
     }, { passive: false });
 
     yesBtn.addEventListener("click", () => {
+      showerCelebration();
       overlay.style.display = "flex";
-      tryTag.style.display = "none";
     });
 
     closeBtn.addEventListener("click", () => {
