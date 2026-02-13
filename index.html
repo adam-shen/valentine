@@ -35,11 +35,15 @@
     /* Moving text background */
     .bg-marquee{
       position: fixed;
-      inset: -40px 0 0 0;
+      inset: 0;
       pointer-events:none;
       z-index: 0;
       opacity: 0.18;
       filter: blur(0.2px);
+      display:flex;
+      flex-direction:column;
+      justify-content:space-around;
+      padding: 16px 0;
     }
     .marquee-row{
       display:flex;
@@ -52,7 +56,7 @@
       color: rgba(255,255,255,0.85);
       mix-blend-mode: screen;
       transform: rotate(-8deg);
-      margin: 24px 0;
+      margin: 6px 0;
     }
     .marquee-row span{
       display:inline-block;
@@ -172,6 +176,13 @@
       align-items:center;
       flex-wrap: wrap;
       padding-bottom: 12px;
+      min-height: 56px;
+    }
+    .btn-row.yes-centered{
+      justify-content: center;
+    }
+    .btn-row.yes-centered .yes{
+      margin-inline: auto;
     }
     button{
       font: inherit;
@@ -287,6 +298,9 @@
       border: 1px solid rgba(255,255,255,0.20);
       box-shadow: var(--shadow);
       text-align:center;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
     }
     .overlay h3{
       margin: 0 0 8px;
@@ -304,6 +318,83 @@
       border: 1px solid rgba(255,255,255,0.18);
       padding: 10px 14px;
       border-radius: 14px;
+    }
+
+
+    .overlay-gif{
+      width: min(240px, 42vw);
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.22);
+      margin: 0 0 16px;
+      display:block;
+      align-self:center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+
+
+    .six-seven-gif{
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      width: min(320px, 55vw);
+      height: min(340px, 52vh);
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.22);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.35);
+      z-index: 35;
+      opacity: 0;
+      transform: translateY(12px) scale(0.95);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      pointer-events: none;
+      overflow: hidden;
+      background: rgba(0,0,0,0.2);
+    }
+    .six-seven-gif iframe{
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+    .six-seven-gif.show{
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .hover-count-pop{
+      position: fixed;
+      font-size: clamp(32px, 7vw, 64px);
+      font-weight: 900;
+      color: #fff;
+      text-shadow: 0 12px 30px rgba(0,0,0,0.55);
+      pointer-events: none;
+      z-index: 40;
+      animation: popCount 1s ease forwards;
+    }
+
+    @keyframes popCount{
+      0%{ opacity:0; transform:scale(0.5) translateY(0); }
+      20%{ opacity:1; transform:scale(1.05) translateY(-8px); }
+      100%{ opacity:0; transform:scale(1) translateY(-28px); }
+    }
+
+    .celebrate-particle{
+      position: fixed;
+      left: 50%;
+      top: 55%;
+      font-size: clamp(18px, 3vw, 28px);
+      pointer-events: none;
+      z-index: 60;
+      animation: burst 1400ms ease-out forwards;
+    }
+
+    @keyframes burst{
+      from{
+        transform: translate(-50%, -50%) translate(0, 0) scale(0.7);
+        opacity: 1;
+      }
+      to{
+        transform: translate(-50%, -50%) translate(var(--x), var(--y)) rotate(var(--r)) scale(1.15);
+        opacity: 0;
+      }
     }
 
     /* Respect motion preferences */
@@ -355,6 +446,12 @@
     </div>
     <div class="marquee-row">
       <div class="marquee-track" id="row3"></div>
+    </div>
+    <div class="marquee-row reverse">
+      <div class="marquee-track" id="row4"></div>
+    </div>
+    <div class="marquee-row">
+      <div class="marquee-track" id="row5"></div>
     </div>
   </div>
 
@@ -409,6 +506,7 @@
   <!-- Celebration overlay -->
   <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-label="Celebration">
     <div class="pop">
+      <img class="overlay-gif" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExb2I4M3JiM3QxN2hhaW9ob2Q5djBrYTVyZ3MzbW9yaTh6ejN4NXZiZCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/26FLdmIp6wJr91JAI/giphy.gif" alt="Happy dancing hearts">
       <h3>WOOHOO 💘💘💘</h3>
       <p>
         Okay you're officialy mine :) 
@@ -416,6 +514,11 @@
       </p>
       <button class="close" id="closeBtn">Close</button>
     </div>
+  </div>
+
+
+  <div class="six-seven-gif" id="sixSevenGif" aria-hidden="true">
+    <iframe src="https://giphy.com/embed/TpvnqBFOE0tVrnGU1h" allowfullscreen title="6 7 joke gif"></iframe>
   </div>
 
   <script>
@@ -432,6 +535,8 @@
     buildMarqueeRow("row1");
     buildMarqueeRow("row2");
     buildMarqueeRow("row3");
+    buildMarqueeRow("row4");
+    buildMarqueeRow("row5");
 
     // ===== Button behavior =====
     const noBtn = document.getElementById("noBtn");
@@ -439,59 +544,111 @@
     const overlay = document.getElementById("overlay");
     const closeBtn = document.getElementById("closeBtn");
     const btnRow = document.getElementById("btnRow");
+    const sixSevenGif = document.getElementById("sixSevenGif");
 
     let noScale = 1;
     let dodgeCount = 0;
     let yesScale = 1;
+    let yesCentered = false;
 
     // Helps keep the No button within the button row area
     function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
 
+    function centerYesButton(){
+      if (yesCentered) return;
+      yesCentered = true;
+      btnRow.classList.add("yes-centered");
+    }
+
     function dodgeNoButton(e){
-  dodgeCount++;
+      dodgeCount++;
 
-  // YES button grows slightly each time
-  yesScale += 0.06;
-  yesBtn.style.transform = `scale(${yesScale})`;
+      if (dodgeCount === 1){
+        centerYesButton();
+      }
 
-  // Show "try again :)" near cursor
-  showTryAgain(e.clientX + 10, e.clientY - 10);
+      // YES button grows slightly each time
+      yesScale += 0.06;
+      yesBtn.style.transform = `scale(${yesScale})`;
 
-  // Shrink NO, but keep it usable
-  noScale = Math.max(0.45, noScale * 0.9);
+      // Show "try again :)" near cursor
+      const xPos = e?.clientX ?? (window.innerWidth / 2);
+      const yPos = e?.clientY ?? (window.innerHeight / 2);
+      showTryAgain(xPos + 10, yPos - 10);
 
-  const area = btnRow.getBoundingClientRect();
-  const btn = noBtn.getBoundingClientRect();
+      // Shrink NO, but keep it usable
+      noScale = Math.max(0.45, noScale * 0.9);
 
-  const maxX = (area.width - btn.width) / 2;
-  const maxY = 14;
+      const area = btnRow.getBoundingClientRect();
+      const btn = noBtn.getBoundingClientRect();
 
-  const x = (Math.random() * maxX * 2) - maxX;
-  const y = (Math.random() * maxY * 2) - maxY;
+      const maxX = Math.max(18, (area.width - btn.width) / 2);
+      const maxY = 16;
 
-  noBtn.style.transform =
-    `translate(${clamp(x, -maxX, maxX)}px, ${clamp(y, -maxY, maxY)}px) scale(${noScale})`;
+      const x = (Math.random() * maxX * 2) - maxX;
+      const y = (Math.random() * maxY * 2) - maxY;
 
-  // Optional: change text after many dodges
-  if (dodgeCount >= 8){
-    noBtn.textContent = "nope 😭";
-  }
-}
+      noBtn.style.transform =
+        `translate(${clamp(x, -maxX, maxX)}px, ${clamp(y, -maxY, maxY)}px) scale(${noScale})`;
 
-function showTryAgain(x, y){
-  const msg = document.createElement("div");
-  msg.className = "try-again-text";
-  msg.textContent = "try again :)";
+      if (dodgeCount === 6){
+        showHoverCount("6", xPos, yPos);
+      } else if (dodgeCount === 7){
+        showHoverCount("7", xPos, yPos);
+        showSixSevenGif();
+      } else if (dodgeCount > 7){
+        noBtn.textContent = "still nope";
+      }
+    }
 
-  msg.style.left = x + "px";
-  msg.style.top = y + "px";
+    function showTryAgain(x, y){
+      const msg = document.createElement("div");
+      msg.className = "try-again-text";
+      msg.textContent = "try again :)";
 
-  document.body.appendChild(msg);
+      msg.style.left = x + "px";
+      msg.style.top = y + "px";
 
-  setTimeout(() => {
-    msg.remove();
-  }, 2000);
-}
+      document.body.appendChild(msg);
+
+      setTimeout(() => {
+        msg.remove();
+      }, 2000);
+    }
+
+    function showHoverCount(value, x, y){
+      const msg = document.createElement("div");
+      msg.className = "hover-count-pop";
+      msg.textContent = value;
+      msg.style.left = `${x}px`;
+      msg.style.top = `${y}px`;
+      document.body.appendChild(msg);
+      setTimeout(() => msg.remove(), 1000);
+    }
+
+    let sixSevenGifTimeout;
+    function showSixSevenGif(){
+      sixSevenGif.classList.add("show");
+      clearTimeout(sixSevenGifTimeout);
+      sixSevenGifTimeout = setTimeout(() => {
+        sixSevenGif.classList.remove("show");
+      }, 5000);
+    }
+
+    function showerCelebration(){
+      const bits = ["💖", "💘", "💕", "💗", "💓", "🎉", "✨"];
+      for (let i = 0; i < 46; i++) {
+        const particle = document.createElement("span");
+        particle.className = "celebrate-particle";
+        particle.textContent = bits[Math.floor(Math.random() * bits.length)];
+        particle.style.setProperty("--x", `${(Math.random() - 0.5) * 100}vw`);
+        particle.style.setProperty("--y", `${(Math.random() - 0.6) * 90}vh`);
+        particle.style.setProperty("--r", `${(Math.random() - 0.5) * 360}deg`);
+        particle.style.animationDelay = `${Math.random() * 250}ms`;
+        document.body.appendChild(particle);
+        setTimeout(() => particle.remove(), 1700);
+      }
+    }
 
     // Dodge on hover (desktop) + on touch (mobile)
     noBtn.addEventListener("mouseenter", dodgeNoButton);
@@ -505,8 +662,8 @@ function showTryAgain(x, y){
     }, { passive: false });
 
     yesBtn.addEventListener("click", () => {
+      showerCelebration();
       overlay.style.display = "flex";
-      tryTag.style.display = "none";
     });
 
     closeBtn.addEventListener("click", () => {
