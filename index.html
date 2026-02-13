@@ -136,27 +136,6 @@
       box-shadow: 0 0 18px rgba(179,107,255,0.35);
     }
 
-    .btn-wrap{
-  position: relative;
-  display: inline-block;
-}
-
-.hover-gif{
-  position: absolute;
-  bottom: 120%;
-  left: 50%;
-  transform: translateX(-50%) scale(0.9);
-  width: 120px;          
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.btn-wrap:hover .hover-gif{
-  opacity: 1;
-  transform: translateX(-50%) scale(1);
-}
-
     h1{
       margin: 18px 0 10px;
       font-size: clamp(34px, 4.2vw, 56px);
@@ -319,9 +298,6 @@
       border: 1px solid rgba(255,255,255,0.20);
       box-shadow: var(--shadow);
       text-align:center;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
     }
     .overlay h3{
       margin: 0 0 8px;
@@ -448,17 +424,12 @@
           </div>
 
           <div class="btn-row" id="btnRow">
+            <button class="yes" id="yesBtn">Yes 💖</button>
 
-  <div class="btn-wrap">
-    <button class="yes" id="yesBtn">Yes 💖</button>
-    <img src="cat-nodding.gif" class="hover-gif" alt="gif">
-  </div>
-
-  <button class="no" id="noBtn" aria-label="No (good luck clicking this)">
-    No 🙃
-  </button>
-
-</div>
+            <button class="no" id="noBtn" aria-label="No (good luck clicking this)">
+              No 🙃
+            </button>
+          </div>
 
         
         </div>
@@ -496,14 +467,6 @@
     </div>
   </div>
 
-
-  <img
-    class="six-seven-gif"
-    id="sixSevenGif"
-    src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdjIyOHd4dmE0b3B4N3BqM2Q3aHZ4b2lqa2Y2amV0MXQxMTZ5d2wwaiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/3o7aD2saalBwwftBIY/giphy.gif"
-    alt="6 7 joke hand movement gif"
-  />
-
   <script>
     // ===== Background text content =====
     const phrases = [
@@ -527,7 +490,6 @@
     const overlay = document.getElementById("overlay");
     const closeBtn = document.getElementById("closeBtn");
     const btnRow = document.getElementById("btnRow");
-    const sixSevenGif = document.getElementById("sixSevenGif");
 
     let noScale = 1;
     let dodgeCount = 0;
@@ -575,9 +537,9 @@
         `translate(${clamp(x, -maxX, maxX)}px, ${clamp(y, -maxY, maxY)}px) scale(${noScale})`;
 
       if (dodgeCount === 6){
-        noBtn.textContent = "Why was 6 afraid of 7? 😳";
+        noBtn.textContent = "still nope 😭";
       } else if (dodgeCount === 7){
-        noBtn.textContent = "Because 7 8 9 😂";
+        noBtn.textContent = "still nope 😭";
       } else if (dodgeCount >= 8){
         noBtn.textContent = "still nope 😭";
       }
