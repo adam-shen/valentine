@@ -132,6 +132,27 @@
       box-shadow: 0 0 18px rgba(179,107,255,0.35);
     }
 
+    .btn-wrap{
+  position: relative;
+  display: inline-block;
+}
+
+.hover-gif{
+  position: absolute;
+  bottom: 120%;
+  left: 50%;
+  transform: translateX(-50%) scale(0.9);
+  width: 120px;          
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.btn-wrap:hover .hover-gif{
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+}
+
     h1{
       margin: 18px 0 10px;
       font-size: clamp(34px, 4.2vw, 56px);
@@ -376,12 +397,17 @@
           </div>
 
           <div class="btn-row" id="btnRow">
-            <button class="yes" id="yesBtn">Yes 💖</button>
 
-            <button class="no" id="noBtn" aria-label="No (good luck clicking this)">
-              No 🙃
-            </button>
-          </div>
+  <div class="btn-wrap">
+    <button class="yes" id="yesBtn">Yes 💖</button>
+    <img src="cat-nodding.gif" class="hover-gif" alt="gif">
+  </div>
+
+  <button class="no" id="noBtn" aria-label="No (good luck clicking this)">
+    No 🙃
+  </button>
+
+</div>
 
         
         </div>
@@ -504,10 +530,9 @@ function showTryAgain(x, y){
       dodgeNoButton();
     }, { passive: false });
 
-    yesBtn.addEventListener("click", () => {
-      overlay.style.display = "flex";
-      tryTag.style.display = "none";
-    });
+   yesBtn.addEventListener("click", () => {
+  overlay.style.display = "flex";
+});
 
     closeBtn.addEventListener("click", () => {
       overlay.style.display = "none";
